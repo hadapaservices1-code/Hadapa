@@ -218,9 +218,9 @@ p { color: var(--mid); max-width: 72ch; }
   display: grid;
   gap: 24px;
 }
-.cards--3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.cards--2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
-.cards--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.cards--3 { grid-template-columns: repeat(3, 1fr); }
+.cards--2 { grid-template-columns: repeat(2, 1fr); }
+.cards--4 { grid-template-columns: repeat(4, 1fr); }
 
 .card {
   background: var(--white);
@@ -1002,6 +1002,9 @@ p { color: var(--mid); max-width: 72ch; }
   .product-row-reverse { grid-template-columns: 1fr !important; }
   /* Flip order on mobile for second product so text comes first */
   .product-card-visual { order: -1; }
+  /* 4-col → 2-col at tablet */
+  .cards--4 { grid-template-columns: repeat(2, 1fr); }
+  /* 3-col → stays 3 until 640px */
 }
 
 /* Mobile */
