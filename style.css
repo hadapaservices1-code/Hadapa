@@ -809,6 +809,47 @@ p { color: var(--mid); max-width: 72ch; }
 }
 
 /* ============================================
+   TEAM PHOTO
+   ============================================ */
+
+.team-photo-block {
+  margin-top: 48px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,.14);
+  position: relative;
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.team-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform .6s ease;
+}
+
+.team-photo-block:hover .team-photo { transform: scale(1.02); }
+
+.team-photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(6,20,25,.75));
+  padding: 40px 28px 20px;
+}
+
+.team-photo-caption p {
+  color: rgba(255,255,255,.85);
+  font-size: .85rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-align: center;
+  max-width: none;
+}
+
+/* ============================================
    PROCESS STEPS (How It Works)
    ============================================ */
 
