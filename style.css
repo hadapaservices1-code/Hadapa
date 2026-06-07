@@ -804,30 +804,74 @@ p { color: var(--mid); max-width: 72ch; }
 /* ============================================
    RESPONSIVE
    ============================================ */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .nav__links { gap: 22px; }
+  .nav__links a { font-size: .88rem; }
+  .nav__cta { padding: 11px 20px; font-size: .88rem; }
+}
+
 @media (max-width: 900px) {
   .footer__grid { grid-template-columns: 1fr 1fr; }
   .contact-layout { grid-template-columns: 1fr; }
   .vision-block { padding: 36px 24px; }
+  .product-row { grid-template-columns: 1fr !important; }
+  .product-row-reverse { grid-template-columns: 1fr !important; }
+  /* Flip order on mobile for second product so text comes first */
+  .product-card-visual { order: -1; }
 }
 
+/* Mobile */
 @media (max-width: 640px) {
   .nav__links, .nav__cta { display: none; }
   .nav__links.open {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 70px; left: 0; right: 0;
+    top: 80px; left: 0; right: 0;
     background: var(--white);
     border-bottom: 1px solid var(--border);
     padding: 20px 24px;
     gap: 18px;
+    z-index: 99;
   }
   .nav__toggle { display: flex; }
+
   .hero { padding-block: 72px 60px; }
+  .hero h1 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+
   .section { padding-block: 56px; }
+
+  .stats__grid { grid-template-columns: 1fr 1fr; }
+
+  /* Cards go single column on small phones */
+  .cards--4, .cards--3 { grid-template-columns: 1fr; }
+  .cards--2 { grid-template-columns: 1fr; }
+
+  /* Products page two-col layout */
+  .product-row,
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* About page two-col layout */
+  [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+
+  .cta-strip { padding: 40px 24px; }
+
   .form { padding: 24px; }
   .form-row { grid-template-columns: 1fr; }
+
   .footer__grid { grid-template-columns: 1fr; }
   .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
-  .stats__grid { grid-template-columns: 1fr 1fr; }
+
+  .vision-block { padding: 28px 20px; }
+
+  .page-hero { padding-block: 52px; }
+  .page-hero h1 { font-size: clamp(1.6rem, 6vw, 2rem); }
 }
