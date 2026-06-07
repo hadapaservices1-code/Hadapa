@@ -104,7 +104,7 @@ p { color: var(--mid); max-width: 72ch; }
   align-items: center;
 }
 .nav__logo:hover { text-decoration: none; opacity: 0.88; transition: opacity 0.2s ease; }
-.nav__logo img { height: 36px; width: auto; display: block; }
+.nav__logo img { height: 46px; width: auto; display: block; }
 
 .nav__links {
   display: flex;
