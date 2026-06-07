@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hadapa Services — Design Preview</title>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────── */
+:root{
+  --bg:       #05050F;
+  --surface:  #0C0C1E;
+  --elevated: #12122A;
+  --glass:    rgba(255,255,255,0.035);
+  --glass-b:  rgba(255,255,255,0.07);
+  --glass-bh: rgba(59,130,246,0.35);
+  --blue:     #3B82F6;
+  --bright:   #60A5FA;
+  --cyan:     #06B6D4;
+  --white:    #F8FAFC;
+  --muted:    rgba(248,250,252,0.55);
+  --muted2:   rgba(248,250,252,0.30);
+  --r:        12px;
+  --r2:       20px;
+  --trans:    all .3s cubic-bezier(.4,0,.2,1);
+  --glow:     0 0 40px rgba(59,130,246,0.18);
+  --glow2:    0 0 80px rgba(59,130,246,0.28);
+}
+
+/* ── RESET ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+/* ── UTILITY ─────────────────────────────────────*/
+.container{max-width:1200px;margin-inline:auto;padding-inline:clamp(20px,4vw,48px)}
+.grad-text{background:linear-gradient(135deg,var(--bright),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:50px;border:1px solid rgba(59,130,246,.25);background:rgba(59,130,246,.08);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bright);margin-bottom:16px}
+.section-head{text-align:center;margin-bottom:60px}
+.section-head h2{font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-.03em;margin-bottom:12px;line-height:1.1}
+.section-head p{font-size:.95rem;color:var(--muted);max-width:50ch;margin-inline:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:.9rem;font-weight:600;transition:var(--trans)}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;box-shadow:var(--glow)}
+.btn-primary:hover{box-shadow:var(--glow2);transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ── NAV ─────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:var(--trans)}
+nav.scrolled{background:rgba(5,5,15,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem}
+.logo-name{font-weight:800;font-size:1.15rem;letter-spacing:-.03em}
+.logo-name span{color:var(--cyan)}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{font-size:.88rem;font-weight:500;color:var(--muted2);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--white)}
+.nav-cta{margin-left:8px}
+
+/* ── HERO ─────────────────────────────────────── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--bg)}
+.hero-bg1{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(59,130,246,.12),transparent)}
+.hero-bg2{position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 80% 50%,rgba(6,182,212,.06),transparent)}
+.hero-grid{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:60px 60px}
+.hero-fade{position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to top,var(--bg),transparent)}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero-inner{position:relative;z-index:1;padding-top:130px;padding-bottom:80px;width:100%}
+.hero-content{max-width:780px}
+.hero h1{font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.04em;line-height:1.04;margin-bottom:22px}
+.hero-sub{font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);max-width:58ch;margin-bottom:36px;line-height:1.7}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:72px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:clamp(24px,5vw,56px)}
+.stat-val{font-size:2.2rem;font-weight:900;color:var(--white)}
+.stat-lab{font-size:.8rem;color:var(--muted2);margin-top:4px}
+
+/* ── INDUSTRIES STRIP ──────────────────────────── */
+.strip{padding:56px 0;background:var(--surface);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.strip-label{text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:24px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.pill{padding:9px 20px;border-radius:50px;border:1px solid rgba(255,255,255,.08);font-size:.82rem;color:var(--muted);transition:var(--trans)}
+.pill:hover{border-color:rgba(59,130,246,.35);color:var(--bright);background:rgba(59,130,246,.06)}
+
+/* ── SECTION ─────────────────────────────────── */
+.section{padding:96px 0}
+.section-alt{background:var(--surface)}
+
+/* ── CARDS ───────────────────────────────────── */
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{padding:28px;border-radius:var(--r2);border:1px solid var(--glass-b);background:var(--glass);transition:var(--trans);position:relative;overflow:hidden}
+.card:hover{border-color:var(--glass-bh);background:rgba(255,255,255,.05);transform:translateY(-3px)}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,0),rgba(6,182,212,0));border-radius:var(--r2);transition:var(--trans)}
+.card:hover::before{background:linear-gradient(135deg,rgba(59,130,246,.05),rgba(6,182,212,.04))}
+.card-icon{width:44px;height:44px;border-radius:10px;background:rgba(59,130,246,.12);display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:16px;transition:transform .3s}
+.card:hover .card-icon{transform:scale(1.1)}
+.card-tag{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(6,182,212,.7);margin-bottom:8px;display:block}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:10px;color:var(--white)}
+.card p{font-size:.85rem;color:var(--muted);line-height:1.65}
+
+/* ── CASE STUDIES ────────────────────────────── */
+.case-card{border-radius:var(--r2);border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);overflow:hidden;transition:var(--trans)}
+.case-card:hover{border-color:rgba(59,130,246,.22);transform:translateY(-2px)}
+.case-top{height:3px;width:100%}
+.case-body{padding:24px}
+.case-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.case-service-tag{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:50px;background:rgba(59,130,246,.12);color:var(--bright)}
+.case-industry{font-size:.7rem;color:var(--muted2)}
+.case-metric-box{padding:16px;border-radius:12px;display:inline-flex;align-items:flex-end;gap:6px;margin-bottom:14px}
+.case-metric-val{font-size:2.5rem;font-weight:900;color:#fff}
+.case-metric-lab{font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:4px;font-weight:500}
+.case-title{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:10px;line-height:1.4}
+.case-desc{font-size:.82rem;color:var(--muted);line-height:1.65}
+.case-result{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);font-size:.78rem;font-weight:600;color:var(--cyan)}
+
+/* ── TESTIMONIALS ────────────────────────────── */
+.testi-card{padding:24px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;transition:var(--trans)}
+.testi-card:hover{border-color:rgba(59,130,246,.18);background:rgba(255,255,255,.04)}
+.stars{display:flex;gap:3px;margin-bottom:14px}
+.star{color:#F59E0B;font-size:14px}
+.testi-quote{font-size:.85rem;color:var(--muted);line-height:1.75;flex:1;margin-bottom:20px}
+.testi-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06)}
+.testi-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0}
+.testi-name{font-size:.85rem;font-weight:600;color:var(--white)}
+.testi-role{font-size:.75rem;color:var(--muted2)}
+
+/* ── CTA BAND ────────────────────────────────── */
+.cta-section{padding:96px 0;background:var(--surface);position:relative;overflow:hidden;text-align:center}
+.cta-orb1{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:rgba(59,130,246,.15);border-radius:50%;filter:blur(100px);pointer-events:none}
+.cta-orb2{position:absolute;left:25%;top:20%;width:300px;height:300px;background:rgba(6,182,212,.07);border-radius:50%;filter:blur(80px);pointer-events:none}
+.cta-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+.cta-inner h2{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;letter-spacing:-.04em;line-height:1.07;margin-bottom:18px}
+.cta-inner p{font-size:1rem;color:var(--muted);max-width:48ch;margin:0 auto 36px}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.trust{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted2)}
+.trust-icon{color:var(--cyan);font-size:.75rem}
+
+/* ── FOOTER ──────────────────────────────────── */
+footer{background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.05);padding:64px 0 36px}
+.footer-grid{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:40px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.06)}
+.footer-brand p{font-size:.85rem;color:var(--muted2);margin-top:12px;max-width:22ch;line-height:1.6}
+.footer-col h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2);margin-bottom:16px}
+.footer-col ul{list-style:none}
+.footer-col ul li+li{margin-top:10px}
+.footer-col ul li a{font-size:.85rem;color:rgba(255,255,255,.35);transition:color .2s}
+.footer-col ul li a:hover{color:var(--white)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.2)}
+
+/* ── ENGAGEMENT MODELS ───────────────────────── */
+.model-card{padding:28px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);position:relative;overflow:hidden;transition:var(--trans)}
+.model-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.model-card:hover{border-color:rgba(59,130,246,.22)}
+.model-card h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:10px}
+.model-card p{font-size:.85rem;color:var(--muted);line-height:1.65}
+
+/* ── WHY CARDS ──────────────────────────────── */
+.why-card{padding:22px;border-radius:var(--r);border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:var(--trans)}
+.why-card:hover{border-color:rgba(59,130,246,.18)}
+.why-num{width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,.12);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:var(--bright);margin-bottom:12px}
+
+/* ── CONTACT SECTION ─────────────────────────── */
+.contact-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:56px;align-items:start}
+.contact-detail{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.contact-icon{width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.contact-detail h5{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:3px}
+.contact-detail p{font-size:.9rem;color:var(--muted)}
+.form-card{padding:36px;border-radius:var(--r2);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:7px}
+.form-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--white);font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s,background .2s}
+.form-input:focus{border-color:rgba(59,130,246,.5);background:rgba(255,255,255,.07)}
+.form-input::placeholder{color:rgba(255,255,255,.22)}
+textarea.form-input{min-height:110px;resize:vertical}
+select.form-input option{background:#0C0C1E;color:var(--white)}
+.form-submit{width:100%;padding:14px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;font-size:.92rem;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:var(--trans);display:flex;align-items:center;justify-content:center;gap:8px}
+.form-submit:hover{box-shadow:var(--glow);transform:translateY(-1px)}
+.checklist{margin-top:28px;padding:20px;border-radius:var(--r);border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02)}
+.checklist h5{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:12px}
+.check-item{display:flex;align-items:center;gap:9px;font-size:.82rem;color:var(--muted);margin-bottom:8px}
+.check-icon{color:var(--cyan);font-size:.75rem}
+
+/* ── CASE STUDY DETAIL CARDS ─────────────────────── */
+.cs-card{border-radius:24px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.015);overflow:hidden;margin-bottom:24px}
+.cs-accent{height:6px;width:100%}
+.cs-header{padding:32px 36px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cs-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.cs-badge{font-size:.68rem;font-weight:700;padding:5px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+.cs-badge-num{background:rgba(59,130,246,.1);color:var(--bright);border-color:rgba(59,130,246,.2)}
+.cs-badge-sf{background:rgba(59,130,246,.1);color:var(--bright);border-color:rgba(59,130,246,.2)}
+.cs-badge-sn{background:rgba(6,182,212,.1);color:var(--cyan);border-color:rgba(6,182,212,.2)}
+.cs-badge-mg{background:rgba(139,92,246,.1);color:#A78BFA;border-color:rgba(139,92,246,.2)}
+.cs-headline{font-size:clamp(1.1rem,2.5vw,1.7rem);font-weight:900;letter-spacing:-.03em;line-height:1.25;color:var(--white);margin-bottom:10px}
+.cs-sub{font-size:.88rem;color:var(--muted);line-height:1.7;max-width:70ch}
+.cs-duration{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:rgba(255,255,255,.3);margin-top:10px}
+.cs-metrics{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(255,255,255,.06)}
+.cs-metric{padding:18px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.cs-metric:last-child{border-right:none}
+.cs-metric-val{font-size:1.4rem;font-weight:900;margin-bottom:3px}
+.cs-metric-label{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:3px}
+.cs-metric-detail{font-size:.65rem;color:rgba(255,255,255,.28);line-height:1.4}
+.cs-body{display:grid;grid-template-columns:2fr 3fr;border-bottom:1px solid rgba(255,255,255,.06)}
+.cs-challenge{padding:28px 32px;border-right:1px solid rgba(255,255,255,.06)}
+.cs-solution{padding:28px 32px}
+.cs-col-label{display:flex;align-items:center;gap:8px;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:14px}
+.cs-col-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0}
+.cs-col-icon-red{background:rgba(239,68,68,.15);color:#F87171}
+.cs-col-icon-blue{background:rgba(59,130,246,.15);color:var(--bright)}
+.cs-challenge-intro{font-size:.8rem;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.cs-bullet{display:flex;align-items:flex-start;gap:9px;font-size:.78rem;color:rgba(255,255,255,.42);line-height:1.6;margin-bottom:7px}
+.cs-dot-red{width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,.5);flex-shrink:0;margin-top:7px}
+.cs-dot-blue{width:5px;height:5px;border-radius:50%;background:rgba(6,182,212,.5);flex-shrink:0;margin-top:7px}
+.cs-sol-block{margin-bottom:18px}
+.cs-sol-title{font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:7px}
+.cs-footer{padding:24px 32px;background:rgba(255,255,255,.01)}
+.cs-footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.cs-footer-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:8px}
+.cs-tags{display:flex;flex-wrap:wrap;gap:5px}
+.cs-tag-cap{font-size:.68rem;padding:3px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:rgba(255,255,255,.45)}
+.cs-why{font-size:.78rem;color:var(--muted);line-height:1.65}
+@media(max-width:768px){
+  .cs-metrics{grid-template-columns:1fr 1fr}
+  .cs-body{grid-template-columns:1fr}
+  .cs-challenge{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  .cs-footer-grid{grid-template-columns:1fr}
+}
+
+/* ── REVEAL ANIMATION ─────────────────────────── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── PAGE SECTIONS (SPA) ─────────────────────── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media(max-width:900px){
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .contact-layout{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .nav-links,.nav-cta{display:none}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="container">
+    <div class="nav-inner">
+      <a class="logo" href="#" onclick="showPage('home')">
+        <div class="logo-mark">H</div>
+        <div class="logo-name">Hadapa<span>.</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" class="active" id="nav-home"          onclick="showPage('home',this)">Home</a></li>
+        <li><a href="#" id="nav-services"       onclick="showPage('services',this)">Services</a></li>
+        <li><a href="#" id="nav-case-studies"   onclick="showPage('case-studies',this)">Case Studies</a></li>
+        <li><a href="#" id="nav-about"          onclick="showPage('about',this)">About</a></li>
+        <li><a href="#" id="nav-contact"        onclick="showPage('contact',this)">Contact</a></li>
+      </ul>
+      <a href="#" class="btn btn-primary nav-cta" onclick="showPage('contact',document.getElementById('nav-contact'))">Free Consultation</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════ PAGE: HOME ════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg1"></div>
+    <div class="hero-bg2"></div>
+    <div class="hero-grid"></div>
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-fade"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="tag">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:pulse 1.5s infinite"></span>
+            Salesforce · ServiceNow · Migration
+          </div>
+          <h1>Transform Your <span class="grad-text">Business</span> with Expert Cloud Solutions</h1>
+          <p class="hero-sub">Hadapa Services delivers end-to-end Salesforce, ServiceNow, and Migration consulting — helping organizations modernize platforms, streamline operations, and drive sustainable revenue growth.</p>
+          <div class="hero-ctas">
+            <a href="#" class="btn btn-primary" onclick="showPage('contact',document.getElementById('nav-contact'))">
+              Get a Free Consultation <span>→</span>
+            </a>
+            <a href="#" class="btn btn-ghost" onclick="showPage('services',document.getElementById('nav-services'))">Explore Services</a>
+          </div>
+          <div class="hero-stats">
+            <div><div class="stat-val" data-count="10" data-suffix="+">10+</div><div class="stat-lab">Years of Experience</div></div>
+            <div><div class="stat-val" data-count="8"  data-suffix="+">8+</div><div class="stat-lab">Industry Verticals</div></div>
+            <div><div class="stat-val" data-count="10" data-suffix="+">10+</div><div class="stat-lab">Services Offered</div></div>
+            <div><div class="stat-val">100%</div><div class="stat-lab">Client Focused</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <div class="strip">
+    <div class="container">
+      <p class="strip-label">Industries We Serve</p>
+      <div class="pills">
+        <span class="pill">Retail &amp; CPG</span>
+        <span class="pill">Financial Services</span>
+        <span class="pill">Manufacturing</span>
+        <span class="pill">Insurance</span>
+        <span class="pill">ISVs</span>
+        <span class="pill">Payment Processing</span>
+        <span class="pill">Health Care</span>
+        <span class="pill">High-Tech</span>
+        <span class="pill">Oil &amp; Gas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES PREVIEW -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="tag">What We Offer</div>
+        <h2>Salesforce · ServiceNow · <span class="grad-text">Migration</span></h2>
+        <p>Three powerful practice areas under one roof — delivering end-to-end cloud transformation for your business.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal"><div class="card-icon">☁️</div><span class="card-tag">Salesforce</span><h3>Salesforce Consulting</h3><p>AppExchange integration, MuleSoft, custom APIs, and full-spectrum Salesforce implementation — driving CRM excellence and real-time data flow across your organization.</p></div>
+        <div class="card reveal"><div class="card-icon">⚙️</div><span class="card-tag">ServiceNow</span><h3>ServiceNow Implementation</h3><p>End-to-end ServiceNow implementation, customization, and Integration Hub connectivity — automating workflows and accelerating your digital service delivery.</p></div>
+        <div class="card reveal"><div class="card-icon">🚚</div><span class="card-tag">Migration</span><h3>CRM &amp; Cloud Migration</h3><p>Structured, zero-downtime migrations from legacy systems to modern cloud platforms — protecting your data, team continuity, and business operations throughout.</p></div>
+      </div>
+      <div style="text-align:center;margin-top:36px">
+        <a href="#" class="btn btn-ghost" onclick="showPage('services',document.getElementById('nav-services'))">View All 10+ Services →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="tag">Why Hadapa</div>
+        <h2>Why Choose <span class="grad-text">Us</span></h2>
+      </div>
+      <div class="grid-4">
+        <div class="why-card reveal"><div class="why-num">01</div><h3 style="font-size:.9rem;font-weight:700;margin-bottom:6px;color:var(--white)">Industry Expertise</h3><p style="font-size:.8rem;color:var(--muted);line-height:1.6">A decade of experience across manufacturing, healthcare, finance, eCommerce, and more.</p></div>
+        <div class="why-card reveal"><div class="why-num">02</div><h3 style="font-size:.9rem;font-weight:700;margin-bottom:6px;color:var(--white)">Multi-Platform Coverage</h3><p style="font-size:.8rem;color:var(--muted);line-height:1.6">Deep expertise across Salesforce, ServiceNow, and seamless cloud migration strategies.</p></div>
+        <div class="why-card reveal"><div class="why-num">03</div><h3 style="font-size:.9rem;font-weight:700;margin-bottom:6px;color:var(--white)">End-to-End Delivery</h3><p style="font-size:.8rem;color:var(--muted);line-height:1.6">Planning, design, development, testing, training, support, and ongoing optimization.</p></div>
+        <div class="why-card reveal"><div class="why-num">04</div><h3 style="font-size:.9rem;font-weight:700;margin-bottom:6px;color:var(--white)">Migration Without Risk</h3><p style="font-size:.8rem;color:var(--muted);line-height:1.6">Structured, zero-downtime migration frameworks that protect your data and business continuity.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="tag">Case Studies</div>
+        <h2>Real Results, <span class="grad-text">Real Impact</span></h2>
+        <p>We measure success by the outcomes we create for clients — not just the projects we deliver.</p>
+      </div>
+      <div class="grid-3">
+        <div class="case-card reveal">
+          <div class="case-top" style="background:linear-gradient(90deg,#3B82F6,#06B6D4)"></div>
+          <div class="case-body">
+            <div class="case-header"><span class="case-service-tag">MuleSoft</span><span class="case-industry">Financial Services</span></div>
+            <div class="case-metric-box" style="background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(6,182,212,.18))"><span class="case-metric-val">40%</span><span class="case-metric-lab">Less Manual Work</span></div>
+            <div class="case-title">Streamlined CRM Integration for Regional Bank</div>
+            <p class="case-desc">Integrated Salesforce with legacy core banking systems via MuleSoft, enabling real-time customer data sync across 12 branches and eliminating duplicate records.</p>
+            <div class="case-result">✓ 40% reduction in manual data entry</div>
+          </div>
+        </div>
+        <div class="case-card reveal">
+          <div class="case-top" style="background:linear-gradient(90deg,#8B5CF6,#3B82F6)"></div>
+          <div class="case-body">
+            <div class="case-header"><span class="case-service-tag">Custom API</span><span class="case-industry">Manufacturing</span></div>
+            <div class="case-metric-box" style="background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(59,130,246,.18))"><span class="case-metric-val">3×</span><span class="case-metric-lab">Faster Order Cycle</span></div>
+            <div class="case-title">ERP-Salesforce Bridge for Global Manufacturer</div>
+            <p class="case-desc">Built a custom bidirectional API integration between Salesforce and SAP, allowing sales teams to see live inventory and push orders directly from CRM.</p>
+            <div class="case-result">✓ 3× faster order-to-cash cycle</div>
+          </div>
+        </div>
+        <div class="case-card reveal">
+          <div class="case-top" style="background:linear-gradient(90deg,#06B6D4,#14B8A6)"></div>
+          <div class="case-body">
+            <div class="case-header"><span class="case-service-tag">Cloud Migration</span><span class="case-industry">Health Care</span></div>
+            <div class="case-metric-box" style="background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(20,184,166,.18))"><span class="case-metric-val">98%</span><span class="case-metric-lab">Data Accuracy</span></div>
+            <div class="case-title">Patient Engagement Platform Migration</div>
+            <p class="case-desc">Migrated a 500K-record patient database to Salesforce Health Cloud with custom middleware, maintaining compliance and achieving near-perfect accuracy.</p>
+            <div class="case-result">✓ 98% data accuracy post-migration</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:36px">
+        <a href="#" class="btn btn-ghost" onclick="showPage('case-studies',document.getElementById('nav-case-studies'))">View All 4 Case Studies →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="tag">Testimonials</div>
+        <h2>Trusted by <span class="grad-text">Industry Leaders</span></h2>
+        <p>Don't take our word for it — here's what our clients say.</p>
+      </div>
+      <div class="grid-3">
+        <div class="testi-card reveal">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p class="testi-quote">"Hadapa Services transformed how we use Salesforce. Their MuleSoft integration eliminated weeks of manual data reconciliation every month. The team is knowledgeable, responsive, and genuinely cares about outcomes."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">SM</div>
+            <div><div class="testi-name">Sarah Mitchell</div><div class="testi-role">VP of Operations · Meridian Financial Group</div></div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p class="testi-quote">"We brought Hadapa in after two failed integration attempts with other vendors. Within 8 weeks they had our SAP-Salesforce bridge running perfectly. Their custom approach made all the difference."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6)">JT</div>
+            <div><div class="testi-name">James Thornton</div><div class="testi-role">Director of IT · Apex Manufacturing Inc.</div></div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p class="testi-quote">"The staff augmentation model worked perfectly for our team. We got seasoned Salesforce architects who felt like true partners, not outsourced consultants. Delivered on time, on budget."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:linear-gradient(135deg,#06B6D4,#14B8A6)">PN</div>
+            <div><div class="testi-name">Priya Nair</div><div class="testi-role">Chief Digital Officer · CareLink Health Systems</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-orb1"></div><div class="cta-orb2"></div>
+    <div class="container">
+      <div class="cta-inner reveal">
+        <div class="tag" style="justify-content:center">Get Started</div>
+        <h2>Ready to Transform Your <span class="grad-text">Cloud Operations?</span></h2>
+        <p>Schedule a free, no-obligation consultation. We'll analyze your setup and outline a clear path forward.</p>
+        <div class="cta-actions">
+          <a href="#" class="btn btn-primary" onclick="showPage('contact',document.getElementById('nav-contact'))">Book a Free Consultation →</a>
+          <a href="#" class="btn btn-ghost" onclick="showPage('services',document.getElementById('nav-services'))">Browse Services</a>
+        </div>
+        <div class="trust">
+          <span class="trust-item"><span class="trust-icon">✓</span> No commitment required</span>
+          <span class="trust-item"><span class="trust-icon">✓</span> Response within 1 business day</span>
+          <span class="trust-item"><span class="trust-icon">✓</span> 10+ years of expertise</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+<!-- ════ PAGE: SERVICES ════ -->
+<div class="page" id="page-services">
+  <section style="padding:130px 0 60px;background:var(--bg);position:relative;overflow:hidden;text-align:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(59,130,246,.1),transparent)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:60px 60px"></div>
+    <div class="container" style="position:relative">
+      <div class="tag" style="justify-content:center">Our Services</div>
+      <h1 style="font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:18px">Three Practices. <span class="grad-text">One Partner.</span></h1>
+      <p style="color:var(--muted);max-width:56ch;margin:0 auto 36px;font-size:1rem">Salesforce, ServiceNow, and Migration expertise — delivered by a single trusted team that understands your full technology landscape.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="#svc-salesforce" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:50px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.08);font-size:.82rem;font-weight:600;color:var(--bright);text-decoration:none;transition:all .2s">☁️ Salesforce</a>
+        <a href="#svc-servicenow" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:50px;border:1px solid rgba(6,182,212,.3);background:rgba(6,182,212,.08);font-size:.82rem;font-weight:600;color:var(--cyan);text-decoration:none;transition:all .2s">⚙️ ServiceNow</a>
+        <a href="#svc-migration" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:50px;border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.08);font-size:.82rem;font-weight:600;color:#A78BFA;text-decoration:none;transition:all .2s">🚚 Migration</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALESFORCE PILLAR -->
+  <section class="section" id="svc-salesforce">
+    <div class="container">
+      <div class="section-head">
+        <div class="tag" style="justify-content:center;border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.08)">☁️ Salesforce</div>
+        <h2>Salesforce <span class="grad-text">Consulting &amp; Integration</span></h2>
+        <p>Maximize your CRM investment with expert consulting, integration, and custom development across the full Salesforce ecosystem.</p>
+      </div>
+      <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">
+        <div class="card"><div class="card-icon">🛒</div><span class="card-tag">Ecosystem</span><h3>AppExchange Integration</h3><p>Carefully select and seamlessly integrate the most suitable AppExchange tools aligned with your business needs, ensuring maximum efficiency and performance.</p></div>
+        <div class="card"><div class="card-icon">🔗</div><span class="card-tag">Middleware</span><h3>MuleSoft Integration</h3><p>Experienced MuleSoft consultants simplify complex ERP integrations, ensuring a smooth and efficient transition that enhances overall system performance.</p></div>
+        <div class="card"><div class="card-icon">🔌</div><span class="card-tag">API</span><h3>Salesforce API Integration</h3><p>Purpose-driven API-based integrations ensuring seamless two-way communication between Salesforce and all your business applications.</p></div>
+        <div class="card"><div class="card-icon">🎯</div><span class="card-tag">Bespoke</span><h3>Custom Development</h3><p>Tailored Salesforce solutions — Apex, LWC, flows, and custom integrations — designed to align perfectly with your specific goals and workflows.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICENOW PILLAR -->
+  <section class="section section-alt" id="svc-servicenow">
+    <div class="container">
+      <div class="section-head">
+        <div class="tag" style="justify-content:center;border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.08);color:var(--cyan)">⚙️ ServiceNow</div>
+        <h2>ServiceNow <span class="grad-text">Implementation &amp; Development</span></h2>
+        <p>From initial implementation to deep customization — we make ServiceNow work exactly the way your business needs it to.</p>
+      </div>
+      <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">
+        <div class="card"><div class="card-icon" style="background:rgba(6,182,212,.12)">🚀</div><span class="card-tag" style="color:rgba(6,182,212,.8)">Implementation</span><h3>ServiceNow Implementation</h3><p>Full-lifecycle ServiceNow deployment — from requirements gathering and configuration to testing, training, and go-live support across ITSM, ITOM, and beyond.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(6,182,212,.12)">🛠️</div><span class="card-tag" style="color:rgba(6,182,212,.8)">Development</span><h3>Development &amp; Customization</h3><p>Custom scripting, UI policies, workflows, and portal development — extending ServiceNow's capabilities to fit your unique operational processes.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(6,182,212,.12)">🔄</div><span class="card-tag" style="color:rgba(6,182,212,.8)">Integration</span><h3>Integration Hub Connectivity</h3><p>Connect ServiceNow to Salesforce, ERP systems, cloud platforms, and third-party tools using Integration Hub spokes for seamless data and workflow synchronization.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIGRATION PILLAR -->
+  <section class="section" id="svc-migration">
+    <div class="container">
+      <div class="section-head">
+        <div class="tag" style="justify-content:center;border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.08);color:#A78BFA">🚚 Migration</div>
+        <h2>Migration <span class="grad-text">Without Disruption</span></h2>
+        <p>Structured, proven migration frameworks that move your business forward — with zero data loss and minimal downtime.</p>
+      </div>
+      <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">
+        <div class="card"><div class="card-icon" style="background:rgba(139,92,246,.12)">🏗️</div><span class="card-tag" style="color:rgba(139,92,246,.8)">Platform</span><h3>CRM &amp; Platform Migration</h3><p>Migrate from legacy CRMs or competing platforms to Salesforce or ServiceNow with expert mapping, transformation, and validation — preserving every critical record.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(139,92,246,.12)">🗄️</div><span class="card-tag" style="color:rgba(139,92,246,.8)">Data</span><h3>Data Migration &amp; Cleansing</h3><p>Comprehensive data audit, deduplication, standardization, and migration — ensuring your new platform starts with clean, accurate, and fully compliant data.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(139,92,246,.12)">☁️</div><span class="card-tag" style="color:rgba(139,92,246,.8)">Cloud</span><h3>On-Premise to Cloud</h3><p>End-to-end lift-and-shift or re-architecture from on-premise infrastructure to modern cloud environments — with security, compliance, and performance as priorities.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENGAGEMENT MODELS -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head"><div class="tag" style="justify-content:center">Engagement Models</div><h2>Your Model, <span class="grad-text">Your Way</span></h2><p>Choose the engagement model that best fits your project scope, timeline, and budget.</p></div>
+      <div class="grid-2">
+        <div class="model-card"><h3>Fixed Price Model</h3><p>Ideal for clearly defined project scopes. Sets expectations upfront by outlining deliverables, rates, and timelines — building trust and eliminating surprises.</p></div>
+        <div class="model-card"><h3>Time &amp; Material Model</h3><p>Designed for dynamic projects. Allows ongoing adjustments to scope and priorities, with billing based on actual hours and resources used.</p></div>
+        <div class="model-card"><h3>Managed Services</h3><p>Our dedicated team manages your entire platform as a continuous service — ensuring peak performance, maximum uptime, and timely updates.</p></div>
+        <div class="model-card"><h3>Staff Augmentation</h3><p>Enhance your team's capabilities by leveraging our experienced consultants alongside your existing workforce for any platform.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="cta-orb1"></div>
+    <div class="container"><div class="cta-inner">
+      <h2>Let's Build Your <span class="grad-text">Solution</span></h2>
+      <p>Talk to our experts about the right approach for your business — Salesforce, ServiceNow, or Migration.</p>
+      <div class="cta-actions"><a href="#" class="btn btn-primary" onclick="showPage('contact',document.getElementById('nav-contact'))">Schedule a Free Consultation →</a></div>
+    </div></div>
+  </section>
+</div>
+
+<!-- ════ PAGE: CASE STUDIES ════ -->
+<div class="page" id="page-case-studies">
+  <!-- HERO -->
+  <section style="padding:130px 0 60px;background:var(--bg);position:relative;overflow:hidden;text-align:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(59,130,246,.1),transparent)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:60px 60px"></div>
+    <div class="container" style="position:relative">
+      <div class="tag" style="justify-content:center">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:pulse 1.5s infinite"></span>
+        Client Outcomes
+      </div>
+      <h1 style="font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:16px">Real Results. <span class="grad-text">Proven Impact.</span></h1>
+      <p style="color:var(--muted);max-width:56ch;margin:0 auto 36px;font-size:1rem">We measure success by the outcomes we create — not just the projects we ship. These engagements represent the depth and breadth of our delivery across Salesforce, ServiceNow, and Migration.</p>
+      <!-- Aggregate stats -->
+      <div style="display:flex;flex-wrap:wrap;gap:40px;justify-content:center;margin-bottom:36px">
+        <div><div style="font-size:2rem;font-weight:900;color:var(--white)">4</div><div style="font-size:.78rem;color:var(--muted2)">Case Studies</div></div>
+        <div><div style="font-size:2rem;font-weight:900;color:var(--white)">3</div><div style="font-size:.78rem;color:var(--muted2)">Practice Areas</div></div>
+        <div><div style="font-size:2rem;font-weight:900;color:var(--white)">10+</div><div style="font-size:.78rem;color:var(--muted2)">Years Delivering</div></div>
+        <div><div style="font-size:2rem;font-weight:900;color:var(--white)">100%</div><div style="font-size:.78rem;color:var(--muted2)">Client Focused</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDY CARDS -->
+  <section style="padding:24px 0 80px;background:var(--bg)">
+    <div class="container">
+
+      <!-- CS 01 — Manufacturing SFMC -->
+      <div class="cs-card">
+        <div class="cs-accent" style="background:linear-gradient(90deg,#3B82F6,#06B6D4)"></div>
+        <div class="cs-header">
+          <div class="cs-badges">
+            <span class="cs-badge cs-badge-num">01</span>
+            <span class="cs-badge cs-badge-sf">☁️ Salesforce</span>
+            <span class="cs-badge">Manufacturing</span>
+            <span class="cs-badge">North America · B2B &amp; B2C</span>
+          </div>
+          <div class="cs-headline">Transforming Marketing &amp; Sales Operations for a Multi-Brand Manufacturing Enterprise</div>
+          <div class="cs-sub">End-to-end Salesforce implementation integrating CRM, Marketing Cloud, and ERP to streamline lead generation, customer engagement, and order workflows.</div>
+          <div class="cs-duration">⏱ Engagement duration: <strong style="color:rgba(255,255,255,.5)">6 months</strong></div>
+        </div>
+        <div class="cs-metrics">
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#3B82F6,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↑ 3×</div>
+            <div class="cs-metric-label">Email Engagement</div>
+            <div class="cs-metric-detail">Uplift in open &amp; click rates through journey personalization</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#3B82F6,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 80%</div>
+            <div class="cs-metric-label">Manual Order Effort</div>
+            <div class="cs-metric-detail">Quote-to-order automation eliminated majority of manual entry</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#3B82F6,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">100%</div>
+            <div class="cs-metric-label">Lead Attribution</div>
+            <div class="cs-metric-detail">Full-funnel attribution from first touch to closed revenue</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#3B82F6,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">1 View</div>
+            <div class="cs-metric-label">Unified Customer</div>
+            <div class="cs-metric-detail">Single record spanning all brands, channels, and touchpoints</div>
+          </div>
+        </div>
+        <div class="cs-body">
+          <div class="cs-challenge">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-red">!</span>Business Challenge</div>
+            <div class="cs-challenge-intro">The client operated with fragmented systems across their multi-brand portfolio. Marketing, sales, and operations each ran in silos — creating friction at every customer touchpoint.</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Email limited to basic broadcasts with high spam rates and low engagement</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>No unified customer view across brands or distributor network</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Manual quote-to-order workflows consuming significant staff hours</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Disconnected ERP and CRM — no real-time data exchange</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Zero lead attribution — high acquisition cost, unknown ROI</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>No structured customer lifecycle or retention strategy</div>
+          </div>
+          <div class="cs-solution">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-blue">✓</span>Solution Delivered</div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Marketing Cloud Transformation</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Designed multi-brand Business Unit architecture in Marketing Cloud</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Built lifecycle journeys: lead → nurture → conversion → retention</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Implemented behavioral segmentation and dynamic AMPscript personalization</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Deployed deliverability strategy: IP warming, domain auth, suppression lists</div>
+            </div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">CRM Optimization &amp; ERP Integration</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Redesigned data model; implemented lead-to-opportunity pipeline automation</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Built bi-directional API integration between Salesforce and ERP</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Automated quote creation, order sync, and customer updates in real time</div>
+            </div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Unified Reporting</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Cross-platform dashboard connecting campaign performance to closed revenue</div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-footer">
+          <div class="cs-footer-grid">
+            <div>
+              <div class="cs-footer-label">Key Capabilities</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Multi-BU MC Architecture</span><span class="cs-tag-cap">CRM + ERP Integration</span><span class="cs-tag-cap">Journey Orchestration</span><span class="cs-tag-cap">Data Model Optimization</span><span class="cs-tag-cap">Deliverability Strategy</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Tech Stack</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Sales Cloud</span><span class="cs-tag-cap">Marketing Cloud</span><span class="cs-tag-cap">Journey Builder</span><span class="cs-tag-cap">AMPscript / SSJS</span><span class="cs-tag-cap">REST API</span><span class="cs-tag-cap">ERP Middleware</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Strategic Impact</div>
+              <div class="cs-why">Enabled the client to move from batch-and-blast email to a fully data-driven revenue engine — with marketing, sales, and operations aligned around a single customer view.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CS 02 — Org Migration -->
+      <div class="cs-card">
+        <div class="cs-accent" style="background:linear-gradient(90deg,#8B5CF6,#3B82F6)"></div>
+        <div class="cs-header">
+          <div class="cs-badges">
+            <span class="cs-badge cs-badge-num">02</span>
+            <span class="cs-badge cs-badge-sf">☁️ Salesforce</span>
+            <span class="cs-badge">Technology / Media</span>
+            <span class="cs-badge">Enterprise · Multi-org environment</span>
+          </div>
+          <div class="cs-headline">Large-Scale Salesforce Org Consolidation for Enterprise Transformation</div>
+          <div class="cs-sub">Seamless migration and consolidation of multiple legacy Salesforce environments into a single, optimized, future-ready architecture.</div>
+          <div class="cs-duration">⏱ Engagement duration: <strong style="color:rgba(255,255,255,.5)">5 months</strong></div>
+        </div>
+        <div class="cs-metrics">
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">1</div>
+            <div class="cs-metric-label">Unified Org</div>
+            <div class="cs-metric-detail">Consolidated multiple orgs into a single governed platform</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 60%</div>
+            <div class="cs-metric-label">Technical Debt</div>
+            <div class="cs-metric-detail">Redundant logic, outdated flows, and dead code removed</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↑ 2×</div>
+            <div class="cs-metric-label">Deployment Speed</div>
+            <div class="cs-metric-detail">Faster release cycles with standardized DevOps process</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#8B5CF6,#3B82F6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 40%</div>
+            <div class="cs-metric-label">Maintenance Cost</div>
+            <div class="cs-metric-detail">Reduced ongoing admin overhead with simplified architecture</div>
+          </div>
+        </div>
+        <div class="cs-body">
+          <div class="cs-challenge">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-red">!</span>Business Challenge</div>
+            <div class="cs-challenge-intro">The client had grown through acquisitions, accumulating multiple disconnected Salesforce orgs with divergent configurations and no central governance.</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Multiple orgs with inconsistent data models and configurations</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>High volume of technical debt: redundant flows, outdated Apex, conflicting rules</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Complex cross-org integrations adding fragility to every deployment</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Users operating differently in each org — heavy training burden</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Maintenance costs escalating with each new product addition</div>
+          </div>
+          <div class="cs-solution">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-blue">✓</span>Solution Delivered</div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Target Architecture &amp; Migration Roadmap</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Assessed all org configurations: objects, flows, Apex, integrations, profiles</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Designed unified target architecture with clear data model standards</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Defined phased migration roadmap with milestone checkpoints and rollback gates</div>
+            </div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Data Migration, Metadata Rebuild &amp; Governance</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Migrated all records with full deduplication, transformation, and validation</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Rebuilt and rationalized Flows, Apex, validation rules, and permission sets</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Established naming conventions, change management, and release protocols</div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-footer">
+          <div class="cs-footer-grid">
+            <div>
+              <div class="cs-footer-label">Key Capabilities</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Large-Scale SF Migration</span><span class="cs-tag-cap">Data Transformation</span><span class="cs-tag-cap">Metadata Rebuild</span><span class="cs-tag-cap">Environment Strategy</span><span class="cs-tag-cap">Governance Framework</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Tech Stack</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Salesforce Core</span><span class="cs-tag-cap">Apex / LWC</span><span class="cs-tag-cap">Declarative Flows</span><span class="cs-tag-cap">Data Loader / ETL</span><span class="cs-tag-cap">CI/CD Pipeline</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Strategic Impact</div>
+              <div class="cs-why">The consolidation eliminated compounding complexity and positioned the client for accelerated innovation. Their platform team went from reactive firefighting to proactive roadmap delivery.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CS 03 — Experience Cloud Portal -->
+      <div class="cs-card">
+        <div class="cs-accent" style="background:linear-gradient(90deg,#06B6D4,#14B8A6)"></div>
+        <div class="cs-header">
+          <div class="cs-badges">
+            <span class="cs-badge cs-badge-num">03</span>
+            <span class="cs-badge cs-badge-sf">☁️ Salesforce</span>
+            <span class="cs-badge">Licensing / Technology</span>
+            <span class="cs-badge">External partner ecosystem</span>
+          </div>
+          <div class="cs-headline">Digitizing Partner Operations with a Scalable Royalty Self-Service Portal</div>
+          <div class="cs-sub">Built a Salesforce Experience Cloud portal to replace a fully manual, Excel-based royalty reporting process — delivering accuracy, visibility, and scale for the partner ecosystem.</div>
+          <div class="cs-duration">⏱ Engagement duration: <strong style="color:rgba(255,255,255,.5)">4 months</strong></div>
+        </div>
+        <div class="cs-metrics">
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#06B6D4,#14B8A6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 85%</div>
+            <div class="cs-metric-label">Operational Effort</div>
+            <div class="cs-metric-detail">Manual review and correction work reduced per reporting cycle</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#06B6D4,#14B8A6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↑ 95%</div>
+            <div class="cs-metric-label">Submission Accuracy</div>
+            <div class="cs-metric-detail">Real-time validation virtually eliminated submission errors</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#06B6D4,#14B8A6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 70%</div>
+            <div class="cs-metric-label">Cycle Time</div>
+            <div class="cs-metric-detail">Reporting cycles completed faster with automated routing</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#06B6D4,#14B8A6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">100%</div>
+            <div class="cs-metric-label">Partner Visibility</div>
+            <div class="cs-metric-detail">Real-time access to submission history and status for all partners</div>
+          </div>
+        </div>
+        <div class="cs-body">
+          <div class="cs-challenge">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-red">!</span>Business Challenge</div>
+            <div class="cs-challenge-intro">Partners submitted royalty reports via email-attached Excel files. The process was opaque, error-prone, and consumed substantial internal bandwidth every cycle.</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Reports submitted as unvalidated Excel attachments via email</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>High error rates: wrong formats, missing data, miscalculations</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>No real-time validation — errors discovered only after manual review</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Partners had zero visibility into submission status or history</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Internal team spent days each cycle validating and chasing partners</div>
+          </div>
+          <div class="cs-solution">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-blue">✓</span>Solution Delivered</div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Experience Cloud Portal (LWR)</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Branded self-service portal with secure partner login and role-based access</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Dashboard showing submission history, status, and outstanding obligations</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Dynamic Excel template generation per partner based on active contracts</div>
+            </div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Validation Engine &amp; Automation</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Front-end LWC validation + backend Apex rules on upload</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Inline error messages guide partners to self-correct without IT involvement</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Auto case creation on submission; email notifications on accept / reject</div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-footer">
+          <div class="cs-footer-grid">
+            <div>
+              <div class="cs-footer-label">Key Capabilities</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Experience Cloud (LWR)</span><span class="cs-tag-cap">LWC Development</span><span class="cs-tag-cap">Validation Logic</span><span class="cs-tag-cap">Dynamic File Generation</span><span class="cs-tag-cap">Partner Enablement</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Tech Stack</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">Experience Cloud</span><span class="cs-tag-cap">Lightning Web Components</span><span class="cs-tag-cap">Apex</span><span class="cs-tag-cap">Salesforce Flows</span><span class="cs-tag-cap">Email Alerts</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Strategic Impact</div>
+              <div class="cs-why">What started as an operational burden became a competitive differentiator — partners cite the portal as evidence of a mature, professional licensing operation that values their time.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CS 04 — ServiceNow Migration -->
+      <div class="cs-card">
+        <div class="cs-accent" style="background:linear-gradient(90deg,#10B981,#06B6D4)"></div>
+        <div class="cs-header">
+          <div class="cs-badges">
+            <span class="cs-badge cs-badge-num">04</span>
+            <span class="cs-badge cs-badge-sn">⚙️ ServiceNow</span>
+            <span class="cs-badge">Enterprise IT</span>
+            <span class="cs-badge">Multi-instance environment</span>
+          </div>
+          <div class="cs-headline">Enterprise ServiceNow Consolidation for Unified IT Operations</div>
+          <div class="cs-sub">Migrated and consolidated multiple ServiceNow instances into a single optimized platform — delivering operational efficiency, governance, and scalability across the enterprise.</div>
+          <div class="cs-duration">⏱ Engagement duration: <strong style="color:rgba(255,255,255,.5)">7 months</strong></div>
+        </div>
+        <div class="cs-metrics">
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#10B981,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">1</div>
+            <div class="cs-metric-label">Unified Platform</div>
+            <div class="cs-metric-detail">All business units on a single ServiceNow instance</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#10B981,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↓ 50%</div>
+            <div class="cs-metric-label">Maintenance Overhead</div>
+            <div class="cs-metric-detail">Eliminated duplicated admin work across separate instances</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#10B981,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">↑ 30%</div>
+            <div class="cs-metric-label">ITSM Resolution</div>
+            <div class="cs-metric-detail">Standardized workflows improved mean-time-to-resolve</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-metric-val" style="background:linear-gradient(135deg,#10B981,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">360°</div>
+            <div class="cs-metric-label">IT Visibility</div>
+            <div class="cs-metric-detail">Enterprise-wide reporting on incidents, changes, and SLAs</div>
+          </div>
+        </div>
+        <div class="cs-body">
+          <div class="cs-challenge">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-red">!</span>Business Challenge</div>
+            <div class="cs-challenge-intro">The organization had accumulated multiple ServiceNow instances through mergers and growth — each with divergent configurations, duplicated ITSM processes, and no shared governance.</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Multiple isolated instances with no shared configuration standards</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Duplicate ITSM and CSM workflows creating inconsistent user experiences</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Migration risk from divergent patch levels, custom scripts, and integrations</div>
+            <div class="cs-bullet"><span class="cs-dot-red"></span>Fragmented SLA reporting — no enterprise-wide IT visibility</div>
+          </div>
+          <div class="cs-solution">
+            <div class="cs-col-label"><span class="cs-col-icon cs-col-icon-blue">✓</span>Solution Delivered</div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Migration &amp; Consolidation Strategy</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Audited all instances: ITSM modules, CSM configs, integrations, custom scripts</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Designed target-state architecture for single unified ServiceNow platform</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Phased migration roadmap with per-BU cutover windows and rollback plans</div>
+            </div>
+            <div class="cs-sol-block">
+              <div class="cs-sol-title">Standardization &amp; Governance</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Aligned patch levels; managed Dev → Test → Prod environment parity</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Merged and rationalized ITSM, CSM, catalog items, SLAs, and escalations</div>
+              <div class="cs-bullet"><span class="cs-dot-blue"></span>Established center of excellence model and admin documentation</div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-footer">
+          <div class="cs-footer-grid">
+            <div>
+              <div class="cs-footer-label">Key Capabilities</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">ServiceNow Migration</span><span class="cs-tag-cap">Environment Management</span><span class="cs-tag-cap">ITSM &amp; CSM Config</span><span class="cs-tag-cap">Workflow Rationalization</span><span class="cs-tag-cap">Governance Design</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Tech Stack</div>
+              <div class="cs-tags">
+                <span class="cs-tag-cap">ServiceNow ITSM</span><span class="cs-tag-cap">ServiceNow CSM</span><span class="cs-tag-cap">Flow Designer</span><span class="cs-tag-cap">Integration Hub</span><span class="cs-tag-cap">Update Sets</span>
+              </div>
+            </div>
+            <div>
+              <div class="cs-footer-label">Strategic Impact</div>
+              <div class="cs-why">A single ServiceNow platform gives the organization a true system of record for IT — enabling faster decisions, cleaner data, and a scalable foundation for AI-assisted workflows.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /container -->
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-orb1"></div><div class="cta-orb2"></div>
+    <div class="container"><div class="cta-inner">
+      <div class="tag" style="justify-content:center">Your Project</div>
+      <h2>Ready to Add Your <span class="grad-text">Success Story?</span></h2>
+      <p>Whether you're planning a Salesforce transformation, a ServiceNow rollout, or a complex migration — let's talk about what success looks like for your organization.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-primary" onclick="showPage('contact',document.getElementById('nav-contact'))">Schedule a Free Consultation →</a>
+        <a href="#" class="btn btn-ghost" onclick="showPage('services',document.getElementById('nav-services'))">Explore Services</a>
+      </div>
+    </div></div>
+  </section>
+</div><!-- /page-case-studies -->
+
+<!-- ════ PAGE: ABOUT ════ -->
+<div class="page" id="page-about">
+  <section style="padding:130px 0 60px;background:var(--bg);position:relative;overflow:hidden;text-align:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(59,130,246,.1),transparent)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:60px 60px"></div>
+    <div class="container" style="position:relative">
+      <div class="tag" style="justify-content:center">About Us</div>
+      <h1 style="font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:18px">Who We <span class="grad-text">Are</span></h1>
+      <p style="color:var(--muted);max-width:56ch;margin:0 auto;font-size:1rem">A forward-thinking technology partner dedicated to helping organizations unlock their full potential through tailored Salesforce solutions and expert IT consulting.</p>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="section section-alt">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+        <div>
+          <div class="tag">Our Vision</div>
+          <h2 style="font-size:2.2rem;font-weight:900;letter-spacing:-.03em;margin-bottom:16px">Unlocking Your <span class="grad-text">Full Potential</span></h2>
+          <p style="color:var(--muted);line-height:1.75;margin-bottom:14px">To help organizations unlock their full potential through tailored solutions and expert IT consulting, fostering long-term success and meaningful client relationships.</p>
+          <p style="color:var(--muted2);font-size:.9rem;line-height:1.75">With over a decade of experience supporting clients in manufacturing, healthcare, finance, eCommerce, and beyond, we bring deep expertise and a genuinely client-first approach to every engagement.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="padding:24px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);text-align:center"><div style="font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,#60A5FA,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">10+</div><div style="font-size:.8rem;color:var(--muted2)">Years of Experience</div></div>
+          <div style="padding:24px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);text-align:center"><div style="font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,#60A5FA,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">8+</div><div style="font-size:.8rem;color:var(--muted2)">Industry Verticals</div></div>
+          <div style="padding:24px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);text-align:center"><div style="font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,#60A5FA,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">10+</div><div style="font-size:.8rem;color:var(--muted2)">Services Offered</div></div>
+          <div style="padding:24px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);text-align:center"><div style="font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,#60A5FA,#06B6D4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">100%</div><div style="font-size:.8rem;color:var(--muted2)">Client Focused</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><div class="tag" style="justify-content:center">Our Values</div><h2>Core Values of <span class="grad-text">Hadapa Services</span></h2></div>
+      <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+        <div class="why-card"><div class="why-num">01</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Customer-Centricity</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We put our clients at the heart of everything we do, delivering solutions tailored to their unique needs and business goals.</p></div>
+        <div class="why-card"><div class="why-num">02</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Integrity &amp; Transparency</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We operate with honesty, clarity, and accountability, building trust through open communication and ethical practices.</p></div>
+        <div class="why-card"><div class="why-num">03</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Innovation &amp; Excellence</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We embrace emerging technologies and continuously refine our approach to deliver cutting-edge consulting solutions.</p></div>
+        <div class="why-card"><div class="why-num">04</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Collaboration &amp; Teamwork</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We believe that success is built through strong partnerships—with our clients and within our teams.</p></div>
+        <div class="why-card"><div class="why-num">05</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Agility &amp; Adaptability</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">In a fast-changing digital world, we stay flexible, responsive, and ready to evolve with our clients' needs.</p></div>
+        <div class="why-card"><div class="why-num">06</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Commitment to Quality</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We are dedicated to delivering high-performance solutions with precision, care, and a focus on long-term success.</p></div>
+        <div class="why-card"><div class="why-num">07</div><h3 style="font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white)">Continuous Learning</h3><p style="font-size:.82rem;color:var(--muted);line-height:1.65">We foster a culture of growth, encouraging our team to learn, innovate, and lead with knowledge.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="cta-orb1"></div>
+    <div class="container"><div class="cta-inner">
+      <h2>Partner With <span class="grad-text">Us Today</span></h2>
+      <p>Ready to experience the Hadapa Services difference? Let's start a conversation.</p>
+      <div class="cta-actions"><a href="#" class="btn btn-primary" onclick="showPage('contact',document.getElementById('nav-contact'))">Get in Touch →</a></div>
+    </div></div>
+  </section>
+</div>
+
+<!-- ════ PAGE: CONTACT ════ -->
+<div class="page" id="page-contact">
+  <section style="padding:130px 0 40px;background:var(--bg);position:relative;overflow:hidden;text-align:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(59,130,246,.1),transparent)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:60px 60px"></div>
+    <div class="container" style="position:relative">
+      <div class="tag" style="justify-content:center">Get in Touch</div>
+      <h1 style="font-size:clamp(2.8rem,6vw,5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px">Let's <span class="grad-text">Talk</span></h1>
+      <p style="color:var(--muted);font-size:1rem">Schedule a free consultation and we'll respond within one business day.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="contact-layout">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:900;letter-spacing:-.02em;margin-bottom:12px">Ready to get started?</h2>
+          <p style="color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:28px">Whether you're exploring Salesforce, ServiceNow, or planning a migration, our experts are here to help — no commitment required.</p>
+          <div class="contact-detail"><div class="contact-icon">✉️</div><div><h5>Email</h5><p><a href="mailto:info@hadapaservices.com" style="color:var(--bright)">info@hadapaservices.com</a></p></div></div>
+          <div class="contact-detail"><div class="contact-icon">⏱️</div><div><h5>Response Time</h5><p>Within 1 business day</p></div></div>
+          <div class="contact-detail"><div class="contact-icon">🌐</div><div><h5>Serving</h5><p>Clients worldwide — remote &amp; on-site</p></div></div>
+          <div class="checklist">
+            <h5>Services We Can Help With</h5>
+            <div class="check-item"><span class="check-icon">✓</span>Salesforce Consulting &amp; Integration</div>
+            <div class="check-item"><span class="check-icon">✓</span>MuleSoft &amp; API Integration</div>
+            <div class="check-item"><span class="check-icon">✓</span>ServiceNow Implementation</div>
+            <div class="check-item"><span class="check-icon">✓</span>ServiceNow Development &amp; Customization</div>
+            <div class="check-item"><span class="check-icon">✓</span>CRM &amp; Platform Migration</div>
+            <div class="check-item"><span class="check-icon">✓</span>Data Migration &amp; Cleansing</div>
+            <div class="check-item"><span class="check-icon">✓</span>On-Premise to Cloud Migration</div>
+            <div class="check-item"><span class="check-icon">✓</span>Managed Services &amp; Staff Augmentation</div>
+          </div>
+        </div>
+        <div class="form-card">
+          <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:22px" id="formTitle">Request a Free Consultation</h3>
+          <form id="contactForm" onsubmit="submitForm(event)">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">First Name *</label><input type="text" class="form-input" placeholder="Jane" required></div>
+              <div class="form-group"><label class="form-label">Last Name *</label><input type="text" class="form-input" placeholder="Smith" required></div>
+            </div>
+            <div class="form-group"><label class="form-label">Business Email *</label><input type="email" class="form-input" placeholder="jane@company.com" required></div>
+            <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" placeholder="Your Company"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Service</label><select class="form-input"><option value="">Select...</option><optgroup label="Salesforce"><option>Salesforce Consulting</option><option>AppExchange Integration</option><option>MuleSoft Integration</option><option>Custom Development</option></optgroup><optgroup label="ServiceNow"><option>ServiceNow Implementation</option><option>ServiceNow Development</option><option>Integration Hub Connectivity</option></optgroup><optgroup label="Migration"><option>CRM &amp; Platform Migration</option><option>Data Migration &amp; Cleansing</option><option>On-Premise to Cloud</option></optgroup><optgroup label="Engagement"><option>Managed Services</option><option>Staff Augmentation</option></optgroup></select></div>
+              <div class="form-group"><label class="form-label">Industry</label><select class="form-input"><option value="">Select...</option><option>Retail / CPG</option><option>Financial Services</option><option>Manufacturing</option><option>Insurance</option><option>Health Care</option><option>High-Tech</option><option>Payment Processing</option><option>Oil &amp; Gas</option><option>ISVs</option></select></div>
+            </div>
+            <div class="form-group"><label class="form-label">Tell Us About Your Project</label><textarea class="form-input" placeholder="Describe your current setup, goals, or pain points..."></textarea></div>
+            <button type="submit" class="form-submit">Send Request <span>→</span></button>
+          </form>
+          <div id="successMsg" style="display:none;text-align:center;padding:40px 0">
+            <div style="font-size:3rem;margin-bottom:14px">✅</div>
+            <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:8px">Request Received!</h3>
+            <p style="color:var(--muted);font-size:.9rem">A member of our team will be in touch within one business day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER (shared) -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><div class="logo-mark">H</div><div class="logo-name">Hadapa<span>.</span></div></div>
+        <p>Expert Salesforce, ServiceNow &amp; migration consulting tailored to your business goals.</p>
+      </div>
+      <div class="footer-col"><h4>Services</h4><ul>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">Salesforce Consulting</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">MuleSoft Integration</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">ServiceNow Implementation</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">ServiceNow Development</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">CRM Migration</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">Cloud Migration</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Company</h4><ul>
+        <li><a href="#" onclick="showPage('about',document.getElementById('nav-about'))">About Us</a></li>
+        <li><a href="#" onclick="showPage('services',document.getElementById('nav-services'))">Services</a></li>
+        <li><a href="#" onclick="showPage('case-studies',document.getElementById('nav-case-studies'))">Case Studies</a></li>
+        <li><a href="#" onclick="showPage('contact',document.getElementById('nav-contact'))">Contact</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul>
+        <li><a href="#" onclick="showPage('contact',document.getElementById('nav-contact'))">Free Consultation</a></li>
+        <li><a href="mailto:info@hadapaservices.com">info@hadapaservices.com</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Hadapa Services LLC. All rights reserved.</span>
+      <span>Salesforce · ServiceNow · Migration</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+</style>
+
+<script>
+// ── SPA ROUTING ─────────────────────────────────────────
+function showPage(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.getElementById('page-' + id).classList.add('active')
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'))
+  if (navEl) navEl.classList.add('active')
+  window.scrollTo({ top: 0 })
+  setTimeout(initReveal, 50)
+}
+
+// ── SCROLL-TRIGGERED REVEALS ─────────────────────────────
+function initReveal() {
+  const els = document.querySelectorAll('.reveal')
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 70)
+        obs.unobserve(e.target)
+      }
+    })
+  }, { threshold: 0.12 })
+  els.forEach(el => { el.classList.remove('visible'); obs.observe(el) })
+}
+
+// ── CANVAS PARTICLE ANIMATION ────────────────────────────
+(function () {
+  const canvas = document.getElementById('heroCanvas')
+  const ctx    = canvas.getContext('2d')
+  let   raf, W, H
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth
+    H = canvas.height = canvas.offsetHeight
+  }
+
+  const N   = 55
+  const D   = 140
+  const pts = []
+
+  function init() {
+    resize()
+    pts.length = 0
+    for (let i = 0; i < N; i++) {
+      pts.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - .5) * .45,
+        vy: (Math.random() - .5) * .45,
+        r: Math.random() * 1.8 + .8
+      })
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H)
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy
+      if (p.x < 0 || p.x > W) p.vx *= -1
+      if (p.y < 0 || p.y > H) p.vy *= -1
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+      ctx.fillStyle = 'rgba(96,165,250,.55)'
+      ctx.fill()
+    })
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x
+        const dy = pts[i].y - pts[j].y
+        const d  = Math.sqrt(dx * dx + dy * dy)
+        if (d < D) {
+          ctx.beginPath()
+          ctx.moveTo(pts[i].x, pts[i].y)
+          ctx.lineTo(pts[j].x, pts[j].y)
+          ctx.strokeStyle = `rgba(59,130,246,${.18 * (1 - d / D)})`
+          ctx.lineWidth = 1
+          ctx.stroke()
+        }
+      }
+    }
+    raf = requestAnimationFrame(draw)
+  }
+
+  init()
+  draw()
+  window.addEventListener('resize', () => { init(); cancelAnimationFrame(raf); draw() })
+})()
+
+// ── NAV SCROLL EFFECT ────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20)
+})
+document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20)
+
+// ── FORM SUBMIT ──────────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault()
+  document.getElementById('contactForm').style.display = 'none'
+  document.getElementById('formTitle').style.display   = 'none'
+  document.getElementById('successMsg').style.display  = 'block'
+}
+
+// ── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initReveal()
+})
+setTimeout(initReveal, 100)
+</script>
+</body>
+</html>

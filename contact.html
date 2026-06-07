@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Hadapa Services</title>
+  <meta name="description" content="Get in touch with Hadapa Services. Schedule a free Salesforce consultation and discover how we can transform your business operations." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__logo">HADAPA<span>.</span></a>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="btn btn--primary nav__cta">Get a Free Consultation</a>
+    <button class="nav__toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero">
+  <div class="container">
+    <h1>Get in Touch</h1>
+    <p>Ready to transform your Salesforce environment? Reach out and we'll get back to you within one business day.</p>
+  </div>
+</section>
+
+<!-- ===== CONTACT SECTION ===== -->
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- LEFT: INFO -->
+      <div class="contact-info">
+        <h2>Let's Talk About Your Goals</h2>
+        <p>Whether you're exploring Salesforce for the first time or looking to optimize an existing implementation, our team is here to help. Schedule a free, no-obligation consultation today.</p>
+
+        <div class="contact-detail">
+          <div class="contact-detail__icon">✉️</div>
+          <div>
+            <h4>Email Us</h4>
+            <p><a href="mailto:info@hadapaservices.com">info@hadapaservices.com</a></p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail__icon">⏱️</div>
+          <div>
+            <h4>Response Time</h4>
+            <p>Within 1 business day</p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail__icon">🌐</div>
+          <div>
+            <h4>Serving Clients</h4>
+            <p>Worldwide — Remote &amp; On-site engagements</p>
+          </div>
+        </div>
+
+        <!-- SERVICES LIST -->
+        <div style="margin-top: 36px; padding: 28px; background: var(--light); border-radius: 12px; border: 1px solid var(--border);">
+          <h4 style="font-size:.85rem; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); margin-bottom:14px;">Services We Can Help With</h4>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> Salesforce AppExchange Integration
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> MuleSoft Integration
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> Custom Salesforce Integration
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> Cloud-Based Integration
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> API Integration
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--mid);">
+              <span style="color:var(--blue); font-weight:700;">✓</span> Middleware Integration
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <div class="form">
+        <h3 style="margin-bottom:24px; font-size:1.3rem;">Request a Free Consultation</h3>
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" placeholder="Jane" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Smith" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Business Email *</label>
+            <input type="email" id="email" name="email" placeholder="jane@yourcompany.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="company">Company Name</label>
+            <input type="text" id="company" name="company" placeholder="Your Company" />
+          </div>
+
+          <div class="form-group">
+            <label for="service">Service of Interest</label>
+            <select id="service" name="service">
+              <option value="">Select a service...</option>
+              <option value="appexchange">AppExchange Integration</option>
+              <option value="mulesoft">MuleSoft Integration</option>
+              <option value="custom">Custom Salesforce Integration</option>
+              <option value="cloud">Cloud-Based Integration</option>
+              <option value="api">API Integration</option>
+              <option value="middleware">Middleware Integration</option>
+              <option value="managed">Managed Services</option>
+              <option value="staff">Staff Augmentation</option>
+              <option value="other">Other / Not Sure Yet</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="industry">Your Industry</label>
+            <select id="industry" name="industry">
+              <option value="">Select your industry...</option>
+              <option>Retail / CPG</option>
+              <option>Financial Services</option>
+              <option>Manufacturing</option>
+              <option>Insurance</option>
+              <option>Health Care</option>
+              <option>High-Tech</option>
+              <option>Payment Processing</option>
+              <option>Oil &amp; Gas</option>
+              <option>ISVs</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Tell Us About Your Project</label>
+            <textarea id="message" name="message" placeholder="Describe your current Salesforce setup, integration needs, or goals..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary form-submit">Send My Request</button>
+        </form>
+
+        <!-- SUCCESS STATE (hidden) -->
+        <div id="successMsg" style="display:none; text-align:center; padding: 40px 20px;">
+          <div style="font-size: 3rem; margin-bottom:16px;">✅</div>
+          <h3 style="margin-bottom:10px;">Thank You!</h3>
+          <p style="color:var(--mid);">Your request has been received. A member of our team will be in touch within one business day.</p>
+          <a href="services.html" class="btn btn--primary" style="margin-top:20px;">Explore Our Services</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY CONSULT ===== -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-header__tag">Free Consultation</span>
+      <h2>What to Expect From Your Consultation</h2>
+      <p>Our free consultation is a no-pressure conversation designed to understand your needs and explore how we can help.</p>
+    </div>
+    <div class="cards cards--3">
+      <div class="card">
+        <div class="card__icon">🗣️</div>
+        <h3>Discovery Call</h3>
+        <p>We start by listening. Our consultants take time to understand your current Salesforce environment, pain points, and business objectives.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">📋</div>
+        <h3>Tailored Recommendations</h3>
+        <p>Based on your needs, we outline the most suitable integration approach, engagement model, and expected outcomes—specific to your situation.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🗺️</div>
+        <h3>Clear Next Steps</h3>
+        <p>You'll leave the conversation with a clear roadmap and no obligation. We let our expertise speak for itself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo">HADAPA<span>.</span></div>
+        <p>Expert Salesforce consulting &amp; integration services tailored to your business goals.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html">AppExchange Integration</a></li>
+          <li><a href="services.html">MuleSoft Integration</a></li>
+          <li><a href="services.html">Custom Integration</a></li>
+          <li><a href="services.html">API Integration</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="contact.html">Get a Consultation</a></li>
+          <li><a href="mailto:info@hadapaservices.com">info@hadapaservices.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2025 Hadapa Services LLC. All rights reserved.</span>
+      <span>Salesforce Consulting &amp; Integration</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  document.querySelector('.form form').style.display = 'none';
+  document.querySelector('.form h3').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
