@@ -30,6 +30,9 @@
 
 <!-- ===== HERO ===== -->
 <section class="hero">
+  <div class="hero__orb hero__orb--1"></div>
+  <div class="hero__orb hero__orb--2"></div>
+  <div class="hero__orb hero__orb--3"></div>
   <div class="container">
     <div class="hero__inner">
       <span class="hero__tag">Salesforce Consulting &amp; Integration</span>
@@ -47,20 +50,20 @@
 <section class="stats">
   <div class="container">
     <div class="stats__grid">
-      <div class="stats__item">
-        <strong>10+</strong>
+      <div class="stats__item" data-animate="fade" data-delay="1">
+        <strong data-counter data-target="10" data-suffix="+">10+</strong>
         <span>Years of Experience</span>
       </div>
-      <div class="stats__item">
-        <strong>8</strong>
+      <div class="stats__item" data-animate="fade" data-delay="2">
+        <strong data-counter data-target="8" data-suffix="">8</strong>
         <span>Industry Verticals</span>
       </div>
-      <div class="stats__item">
-        <strong>100%</strong>
+      <div class="stats__item" data-animate="fade" data-delay="3">
+        <strong data-counter data-target="100" data-suffix="%">100%</strong>
         <span>Client Focused</span>
       </div>
-      <div class="stats__item">
-        <strong>6</strong>
+      <div class="stats__item" data-animate="fade" data-delay="4">
+        <strong data-counter data-target="6" data-suffix="">6</strong>
         <span>Core Services</span>
       </div>
     </div>
@@ -70,7 +73,7 @@
 <!-- ===== BENEFITS ===== -->
 <section class="section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" data-animate>
       <span class="section-header__tag">Why Salesforce</span>
       <h2>Benefits of Salesforce Consulting Services</h2>
       <p>A fully optimized Salesforce system gives your team the clarity, tools, and automation to work smarter and grow faster.</p>
@@ -103,7 +106,7 @@
 <!-- ===== SERVICES OVERVIEW ===== -->
 <section class="section section--alt">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" data-animate>
       <span class="section-header__tag">Our Services</span>
       <h2>Tailored Salesforce Integration for Your Success</h2>
       <p>As a forward-thinking technology partner, Hadapa Services delivers end-to-end Salesforce integration solutions designed to expand your ecosystem's capabilities.</p>
@@ -149,7 +152,7 @@
 <!-- ===== INDUSTRY VERTICALS ===== -->
 <section class="section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" data-animate>
       <span class="section-header__tag">Industries We Serve</span>
       <h2>Expertise Across Key Industry Verticals</h2>
       <p>With a decade of experience, our team understands the unique integration needs of your sector.</p>
@@ -171,7 +174,7 @@
 <!-- ===== ENGAGEMENT MODELS ===== -->
 <section class="section section--alt">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" data-animate>
       <span class="section-header__tag">Engagement Models</span>
       <h2>Your Model, Your Way</h2>
       <p>We offer flexible engagement options designed to match your project scope, timeline, and budget.</p>
@@ -200,7 +203,7 @@
 <!-- ===== CTA ===== -->
 <section class="section">
   <div class="container">
-    <div class="cta-strip">
+    <div class="cta-strip" data-animate>
       <h2>Ready to Unlock the Full Power of Salesforce?</h2>
       <p>Schedule a free consultation with our experts and discover how Hadapa Services can transform your operations.</p>
       <a href="contact.html" class="btn btn--primary">Get a Free Consultation</a>
@@ -248,5 +251,6 @@
   </div>
 </footer>
 
+<script src="script.js"></script>
 </body>
 </html>

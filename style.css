@@ -505,6 +505,305 @@ p { color: var(--mid); max-width: 72ch; }
 .cta-strip p  { margin: 0 auto 28px; }
 
 /* ============================================
+   KEYFRAMES
+   ============================================ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -30px) scale(1.08); }
+  66%       { transform: translate(-25px, 25px) scale(0.94); }
+}
+@keyframes gradShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+
+[data-animate] {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+[data-animate="fade"]  { transform: none; }
+[data-animate="left"]  { transform: translateX(-50px); }
+[data-animate="right"] { transform: translateX(50px); }
+[data-animate="scale"] { transform: scale(0.88); }
+[data-animate].visible { opacity: 1 !important; transform: none !important; }
+
+[data-delay="1"] { transition-delay: 0.08s; }
+[data-delay="2"] { transition-delay: 0.16s; }
+[data-delay="3"] { transition-delay: 0.24s; }
+[data-delay="4"] { transition-delay: 0.32s; }
+[data-delay="5"] { transition-delay: 0.40s; }
+[data-delay="6"] { transition-delay: 0.48s; }
+
+/* ============================================
+   HERO ENHANCEMENTS
+   ============================================ */
+
+.hero {
+  background: linear-gradient(135deg, #060f2e 0%, #0a2a6e 35%, #0057B8 65%, #1A7FE8 100%);
+  background-size: 200% 200%;
+  animation: gradShift 12s ease infinite;
+}
+
+.hero h1 {
+  background: linear-gradient(130deg, #ffffff 0%, #bfdbfe 55%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__orb--1 {
+  width: 640px; height: 640px;
+  top: -220px; right: -160px;
+  background: radial-gradient(circle, rgba(26,127,232,0.22) 0%, transparent 70%);
+  animation: floatOrb 14s ease-in-out infinite;
+}
+.hero__orb--2 {
+  width: 420px; height: 420px;
+  bottom: -100px; left: 8%;
+  background: radial-gradient(circle, rgba(0,57,160,0.18) 0%, transparent 70%);
+  animation: floatOrb 10s ease-in-out infinite reverse;
+  animation-delay: -4s;
+}
+.hero__orb--3 {
+  width: 260px; height: 260px;
+  top: 15%; right: 28%;
+  background: radial-gradient(circle, rgba(147,197,253,0.12) 0%, transparent 70%);
+  animation: floatOrb 17s ease-in-out infinite;
+  animation-delay: -9s;
+}
+
+/* Hero entrance animations */
+.hero__tag     { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+.hero h1       { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+.hero p        { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.32s both; }
+.hero__actions { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
+
+/* ============================================
+   NAV SCROLL STATE
+   ============================================ */
+
+.nav { transition: box-shadow 0.3s ease; }
+.nav--scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); }
+
+/* ============================================
+   ENHANCED BUTTONS
+   ============================================ */
+
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn--primary:hover {
+  background: var(--blue-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,87,184,0.38);
+  text-decoration: none;
+}
+.btn--primary:active { transform: translateY(0); box-shadow: none; }
+
+.btn--outline:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   ENHANCED CARDS
+   ============================================ */
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
+}
+.card:hover {
+  box-shadow: 0 20px 56px rgba(0,87,184,0.13);
+  transform: translateY(-8px);
+  border-color: rgba(0,87,184,0.18);
+}
+.card:hover::before { transform: scaleX(1); }
+
+.card__icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover .card__icon { transform: scale(1.18) rotate(-6deg); }
+
+/* ============================================
+   ENHANCED STATS
+   ============================================ */
+
+.stats {
+  background: linear-gradient(135deg, #060f2e 0%, #0057B8 50%, #1A7FE8 100%);
+  background-size: 200% 200%;
+  animation: gradShift 10s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+.stats::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.stats__item { position: relative; z-index: 1; }
+.stats__item strong {
+  background: linear-gradient(135deg, #fff 0%, #bfdbfe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   ENHANCED CTA STRIP
+   ============================================ */
+
+.cta-strip {
+  background: linear-gradient(135deg, #060f2e 0%, #0057B8 50%, #1A7FE8 100%);
+  background-size: 200% 200%;
+  animation: gradShift 10s ease infinite;
+  border: none;
+  border-radius: 20px;
+  padding: 72px 56px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.cta-strip h2, .cta-strip p { color: var(--white); position: relative; z-index: 1; }
+.cta-strip a { position: relative; z-index: 1; }
+.cta-strip .btn--primary {
+  background: var(--white);
+  color: var(--blue);
+}
+.cta-strip .btn--primary:hover {
+  background: #eef5ff;
+  color: var(--blue);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.2);
+}
+
+/* ============================================
+   ENHANCED PAGE HERO
+   ============================================ */
+
+.page-hero {
+  background: linear-gradient(135deg, #060f2e 0%, #0057B8 60%, #1A7FE8 100%);
+  background-size: 200% 200%;
+  animation: gradShift 12s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  width: 560px; height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,127,232,0.2) 0%, transparent 70%);
+  top: -200px; right: -80px;
+  animation: floatOrb 14s ease-in-out infinite;
+  pointer-events: none;
+}
+.page-hero .container { position: relative; z-index: 1; }
+.page-hero h1 {
+  background: linear-gradient(130deg, #fff 0%, #bfdbfe 55%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both;
+}
+.page-hero p { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.22s both; }
+
+/* ============================================
+   ENHANCED MODEL CARDS
+   ============================================ */
+
+.model-card {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.model-card::before { transition: height 0.35s ease; }
+.model-card:hover {
+  box-shadow: 0 16px 48px rgba(0,87,184,0.1);
+  transform: translateY(-6px);
+}
+.model-card:hover::before { height: 6px; }
+
+/* ============================================
+   ENHANCED PILLS
+   ============================================ */
+
+.pill {
+  cursor: default;
+  transition: transform 0.25s ease, border-color 0.25s ease,
+              color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.pill:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-pale);
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,87,184,0.15);
+}
+
+/* ============================================
+   ENHANCED VALUE ITEMS
+   ============================================ */
+
+.value-item {
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.value-item:hover {
+  box-shadow: 0 8px 32px rgba(0,87,184,0.09);
+  transform: translateY(-4px);
+  border-color: rgba(0,87,184,0.18);
+}
+
+/* ============================================
+   VISION BLOCK
+   ============================================ */
+
+.vision-block {
+  background: linear-gradient(135deg, #060f2e 0%, #0057B8 50%, #1A7FE8 100%);
+  background-size: 200% 200%;
+  animation: gradShift 10s ease infinite;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 900px) {
